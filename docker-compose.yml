@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+ wordpress:
+  depends_on:
+   - db
+  image: wordpress:latest
+  ports:
+   - "80:80"
+  restart: always
+  environment:
+   WORDPRESS_DB_HOST: db:3306
+   WORDPRESS_DB_USER: wpuser
+   WORDPRESS_DB_PASSWORD: adminsis
+   WORDPRESS_DB_NAME: wp
+  volumes:
+   - wordpress:/var/www/html
+
+ db:
+  image: mysql:5.6
+  volumes:
+   - db_data:/var/lib/mysql
+  environment:
+   - MYSQL_ROOT_PASSWORD=adminsis
+   - MYSQL_DATABASE=wp
+   - MYSQL_USER=wpuser
+   - MYSQL_PASSWORD=adminsis
+
+ adminer:
+  image: adminer
+  restart: always
+  ports:
+   - "8080:8080"
+  depends_on:
+   - "db"
+
+volumes:
+ wordpress:
+ db_data: {}
